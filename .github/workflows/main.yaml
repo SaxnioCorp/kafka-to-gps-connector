@@ -1,4 +1,10 @@
+name: 'build and push to ghcr'
+
 on: push
+
+env:
+  IMAGE_NAME: 'kafka-to-gps-connector'
+  REGISTRY: 'ghcr.io'
 
 jobs:
   build-n-push:
