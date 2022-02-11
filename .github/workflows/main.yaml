@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: LowerCase repo owner
         run: |
-          echo "REPO_OWNER_LOWERCASE=${GITHUB_REPOSITORY_OWNER,,}" >> ${GITHUB_ENV}
+          echo "REPO_OWNER_LC=${GITHUB_REPOSITORY_OWNER,,}" >> ${GITHUB_ENV}
 
   get-gitversion:
     runs-on: ubuntu-latest
@@ -34,12 +34,15 @@ jobs:
 
       - name: 'Set version in ${GITHUB_ENV}'
         run: |
-          echo "GITVERSION_SEMVER=${GITVERSION_SEMVER}" >> ${GITHUB_ENV}
+          echo "GITVERSION_SEMVER_LC=${GITVERSION_SEMVER}" >> ${GITHUB_ENV}
 
   build-n-push:
     runs-on: ubuntu-latest
     if: endsWith(github.ref, '/master')
     needs: [get-gitversion]
+    env:
+      GITVERSION_SEMVER: ${{ github.GITVERSION_SEMVER_LC }}
+      REPO_OWNER: ${{ github.REPO_OWNER_LC }}
     container:
       image: docker:stable
     # defaults:
@@ -60,10 +63,10 @@ jobs:
 
       - name: Display SemVer
         run: |
-          echo "SemVer: $GITVERSION_SEMVER"
+          echo "SemVer: ${{ env.GITVERSION_SEMVER }}"
 
       - name: Build and push to registry
         run: |
-          docker build -t ${{ env.REGISTRY }}/${{ env.REPO_OWNER_LOWERCASE }}/${{ env.IMAGE_NAME }}:$GITVERSION_SEMVER \
-                       -t ${{ env.REGISTRY }}/${{ env.REPO_OWNER_LOWERCASE }}/${{ env.IMAGE_NAME }}:latest .
-          docker push -a ${{ env.REGISTRY }}/${{ env.REPO_OWNER_LOWERCASE }}/${{ env.IMAGE_NAME }}
+          docker build -t ${{ env.REGISTRY }}/${{ env.REPO_OWNER }}/${{ env.IMAGE_NAME }}:${{ env.GITVERSION_SEMVER }} \
+                       -t ${{ env.REGISTRY }}/${{ env.REPO_OWNER }}/${{ env.IMAGE_NAME }}:latest .
+          docker push -a ${{ env.REGISTRY }}/${{ env.REPO_OWNER }}/${{ env.IMAGE_NAME }}
