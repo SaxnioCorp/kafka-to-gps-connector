@@ -51,7 +51,7 @@ jobs:
       GITVERSION_SEMVER: ${{ needs.get-gitversion.outputs.GITVERSION_SEMVER }}
       REPO_OWNER: ${{ needs.lower-case-owner.outputs.REPO_OWNER }}
     container:
-      image: docker:stable
+      image: docker:dind
     # defaults:
     #   run:
     #     # Force sh since bash is not supported in docker:stable
