@@ -10,14 +10,14 @@ jobs:
   lower-case-owner:
     runs-on: ubuntu-latest
     outputs:
-      REPO_OWNER: ${{ steps.step1.outputs.REPO_OWNER }}
+      REPO_OWNER: ${{ steps.step1.outputs.repo_owner_lc }}
     steps:
       - name: LowerCase repo owner
         id: 'step1'
         run: |
           REPO_OWNER=${GITHUB_REPOSITORY_OWNER,,}
           echo $REPO_OWNER
-          echo "::set-output name=REPO_OWNER::$REPO_OWNER"
+          echo "::set-output name=repo_owner_lc::$REPO_OWNER"
 
   get-gitversion:
     runs-on: ubuntu-latest
@@ -47,7 +47,7 @@ jobs:
   build-n-push:
     runs-on: ubuntu-latest
     if: endsWith(github.ref, '/master')
-    needs: [get-gitversion]
+    needs: [lower-case-owner, get-gitversion]
     env:
       GITVERSION_SEMVER: ${{ needs.get-gitversion.outputs.GITVERSION_SEMVER }}
       REPO_OWNER: ${{ needs.lower-case-owner.outputs.REPO_OWNER }}
