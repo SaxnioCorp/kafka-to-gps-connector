@@ -10,6 +10,12 @@ jobs:
   build-n-push:
     runs-on: ubuntu-latest
     if: endsWith(github.ref, '/master')
+    container:
+      image: docker:stable
+    defaults:
+      run:
+        # Force sh since bash is not supported in docker:stable
+        shell: sh
     steps:
       - uses: actions/checkout@v2
         with:
