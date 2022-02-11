@@ -14,10 +14,31 @@ jobs:
         run: |
           echo "REPO_OWNER_LOWERCASE=${GITHUB_REPOSITORY_OWNER,,}" >> ${GITHUB_ENV}
 
+  get-gitversion:
+    runs-on: ubuntu-latest
+    needs: [lower-case-owner]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.10
+        with:
+          versionSpec: '5.x'
+
+      - name: Execute GitVersion
+        uses: gittools/actions/gitversion/execute@v0.9.10
+        with:
+          useConfigFile: false
+
+      - run: |
+          echo "GITVERSION_SEMVER=$GITVERSION_SEMVER" >> ${GITHUB_ENV}
+
   build-n-push:
     runs-on: ubuntu-latest
     if: endsWith(github.ref, '/master')
-    needs: [lower-case-owner]
+    needs: [get-gitversion]
     container:
       image: docker:stable
     # defaults:
@@ -35,16 +56,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v0.9.10
-        with:
-          versionSpec: '5.x'
-
-      - name: Execute GitVersion
-        uses: gittools/actions/gitversion/execute@v0.9.10
-        with:
-          useConfigFile: false
 
       - name: Display SemVer
         run: |
