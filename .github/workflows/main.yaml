@@ -34,7 +34,7 @@ jobs:
       - name: Execute GitVersion
         uses: gittools/actions/gitversion/execute@v0.9.10
         with:
-          useConfigFile: true
+          useConfigFile: false
 
       - name: Display SemVer
         run: |
