@@ -7,9 +7,17 @@ env:
   REGISTRY: 'ghcr.io'
 
 jobs:
+  lower-case-owner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: LowerCase repo owner
+        run: |
+          echo "REPO_OWNER_LOWERCASE=${GITHUB_REPOSITORY_OWNER,,}" >> ${GITHUB_ENV}
+
   build-n-push:
     runs-on: ubuntu-latest
     if: endsWith(github.ref, '/master')
+    needs: [lower-case-owner]
     container:
       image: docker:stable
     # defaults:
@@ -27,10 +35,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: LowerCase repo owner
-        run: |
-          echo "REPO_OWNER_LOWERCASE=${GITHUB_REPOSITORY_OWNER,,}" >> ${GITHUB_ENV}
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0.9.10
