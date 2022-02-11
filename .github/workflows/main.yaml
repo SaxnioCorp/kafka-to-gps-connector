@@ -16,6 +16,7 @@ jobs:
         id: 'step1'
         run: |
           REPO_OWNER=${GITHUB_REPOSITORY_OWNER,,}
+          echo $REPO_OWNER
           echo "::set-output name=REPO_OWNER::$REPO_OWNER"
 
   get-gitversion:
