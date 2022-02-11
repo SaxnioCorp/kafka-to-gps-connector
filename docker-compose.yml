@@ -1,0 +1,11 @@
+# Compose for testing
+
+version: '3.9'
+
+services:
+  kafka-gps-con:
+    container_name: "kafka-gps-con"
+    image: cp-kaf-con:dev
+    tty: true
+    stdin_open: true
+    entrypoint: /bin/bash

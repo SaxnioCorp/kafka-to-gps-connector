@@ -1,0 +1,41 @@
+on: push
+
+jobs:
+  build-n-push:
+    runs-on: ubuntu-latest
+    if: endsWith(github.ref, '/master')
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Login ghcr.io
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: LowerCase repo owner
+        run: |
+          echo "REPO_OWNER_LOWERCASE=${GITHUB_REPOSITORY_OWNER,,}" >> ${GITHUB_ENV}
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.10
+        with:
+          versionSpec: '5.x'
+
+      - name: Execute GitVersion
+        uses: gittools/actions/gitversion/execute@v0.9.10
+        with:
+          useConfigFile: true
+
+      - name: Display SemVer
+        run: |
+          echo "SemVer: $GITVERSION_SEMVER"
+
+      - name: Build and push to registry
+        run: |
+          docker build -t ${{ env.REGISTRY }}/${{ env.REPO_OWNER_LOWERCASE }}/${{ env.IMAGE_NAME }}:$GITVERSION_SEMVER \
+                       -t ${{ env.REGISTRY }}/${{ env.REPO_OWNER_LOWERCASE }}/${{ env.IMAGE_NAME }}:latest .
+          docker push -a ${{ env.REGISTRY }}/${{ env.REPO_OWNER_LOWERCASE }}/${{ env.IMAGE_NAME }}
