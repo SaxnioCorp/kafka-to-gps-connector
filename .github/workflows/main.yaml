@@ -15,7 +15,8 @@ jobs:
       - name: LowerCase repo owner
         id: 'step1'
         run: |
-          echo "::set-output name=REPO_OWNER::${GITHUB_REPOSITORY_OWNER,,}"
+          REPO_OWNER=${GITHUB_REPOSITORY_OWNER,,}
+          echo "::set-output name=REPO_OWNER::$REPO_OWNER"
 
   get-gitversion:
     runs-on: ubuntu-latest
