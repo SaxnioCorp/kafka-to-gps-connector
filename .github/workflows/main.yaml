@@ -32,8 +32,9 @@ jobs:
         with:
           useConfigFile: false
 
-      - run: |
-          echo "GITVERSION_SEMVER=$GITVERSION_SEMVER" >> ${GITHUB_ENV}
+      - name: 'Set version in ${GITHUB_ENV}'
+        run: |
+          echo "GITVERSION_SEMVER=${GITVERSION_SEMVER}" >> ${GITHUB_ENV}
 
   build-n-push:
     runs-on: ubuntu-latest
