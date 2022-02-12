@@ -11,3 +11,4 @@ FROM base AS final
 RUN mkdir -p /usr/share/java/plugins
 # RUN curl -sSL https://github.com/GoogleCloudPlatform/pubsub/releases/download/v0.11-alpha/pubsub-kafka-connector.jar -o pubsub-kafka-connector.jar
 COPY --from=curler --chown=root:root /download/pubsub-kafka-connector.jar /usr/share/java/plugins/pubsub-kafka-connector.jar
+COPY gcp_account.json /usr/share/java/plugins/gcp_account.json
