@@ -5,7 +5,7 @@ USER root
 RUN mkdir -p /download
 WORKDIR /download
 # RUN curl -sSLO https://github.com/GoogleCloudPlatform/pubsub/releases/download/v0.11-alpha/pubsub-kafka-connector.jar
-RUN sudo curl -LJO https://github.com/GoogleCloudPlatform/pubsub/releases/download/v0.11-alpha/pubsub-kafka-connector.jar
+RUN curl -LJO https://github.com/GoogleCloudPlatform/pubsub/releases/download/v0.11-alpha/pubsub-kafka-connector.jar
 
 FROM base AS final
 RUN mkdir -p /usr/share/java/plugins
