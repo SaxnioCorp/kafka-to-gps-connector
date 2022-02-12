@@ -1,6 +1,7 @@
 FROM confluentinc/cp-kafka-connect:6.1.0 AS base
 
 FROM curlimages/curl:7.81.0 AS curler
+RUN mkdir -p /download
 WORKDIR /download
 # RUN curl -sSLO https://github.com/GoogleCloudPlatform/pubsub/releases/download/v0.11-alpha/pubsub-kafka-connector.jar
 RUN sudo curl -LJO https://github.com/GoogleCloudPlatform/pubsub/releases/download/v0.11-alpha/pubsub-kafka-connector.jar
