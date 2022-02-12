@@ -9,3 +9,8 @@ services:
     tty: true
     stdin_open: true
     entrypoint: /bin/bash
+  curl-test:
+    image: cp-kaf-con:dev
+    tty: true
+    stdin_open: true
+    entrypoint: /bin/bash
